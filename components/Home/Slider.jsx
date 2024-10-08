@@ -21,8 +21,7 @@ export default function Slider() {
 
     // lakukan perulangan untuk setiap data yang diambil
     querySnapshot.forEach((doc) => {
-      // tampilkan data yang diambil
-      console.log(doc.data());
+      // console.log(doc.data());
 
       // kode ini digunakan untuk mengupdate state sliderList dengan menambahkan data
       //baru yang diambil dari firestore, prev adalah state sebelumnya, dan kode ini

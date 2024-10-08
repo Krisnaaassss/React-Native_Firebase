@@ -1,13 +1,7 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-export default function CategoryItem({ category }) {
+export default function CategoryItem({ category, onCategoryPress }) {
   return (
     <TouchableOpacity onPress={() => onCategoryPress(category)}>
       <View
@@ -31,7 +25,8 @@ export default function CategoryItem({ category }) {
           fontSize: 12,
           fontFamily: "outfit-medium",
           textAlign: "center",
-          mt: 5,
+          marginTop: 5,
+          paddingRight: 10,
         }}
       >
         {category.name}
