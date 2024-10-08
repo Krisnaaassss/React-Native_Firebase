@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -11,6 +11,7 @@ export default function BusinnesListByCategory() {
   const { category } = useLocalSearchParams();
 
   const [businessList, setBusinnesList] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -21,6 +22,8 @@ export default function BusinnesListByCategory() {
   }, []);
 
   const getBusinessList = async () => {
+    setBusinnesList([]);
+    setLoading(true);
     const q = query(
       collection(db, "BusinessList"),
       where("category", "==", category)
@@ -32,16 +35,26 @@ export default function BusinnesListByCategory() {
 
       setBusinnesList((prev) => [...prev, doc.data()]);
     });
+
+    setLoading(false);
   };
 
   return (
     <View>
-      {businessList.length > 0 ? (
+      {businessList.length > 0 && loading === false ? (
         <FlatList
           data={businessList}
+          onRefresh={getBusinessList}
+          refreshing={loading}
           renderItem={({ item, index }) => (
             <BusinnesListCard business={item} key={index} />
           )}
+        />
+      ) : loading ? (
+        <ActivityIndicator
+          size={"large"}
+          color={Colors.PRIMARY}
+          style={{ marginTop: "70%" }}
         />
       ) : (
         <Text
