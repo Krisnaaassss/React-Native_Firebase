@@ -6,7 +6,7 @@ import { collection, getDocs, query } from "firebase/firestore";
 import CategoryItem from "./CategoryItem";
 import { useRouter } from "expo-router";
 
-export default function Catergory() {
+export default function Catergory({ explore = false, onCategorySelect }) {
   const [categoryList, setCategoryList] = useState([]);
   const router = useRouter();
   useEffect(() => {
@@ -24,29 +24,40 @@ export default function Catergory() {
     });
   };
 
+  const onCategoryPressHandler = (item) => {
+    if (!explore) {
+      router.push("/businesslist/" + item.name);
+    } else {
+      onCategorySelect(item.name);
+    }
+  };
+
   return (
     <View>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 20,
-          marginTop: 10,
-        }}
-      >
-        <Text
+      {!explore && (
+        <View
           style={{
-            fontSize: 20,
-            fontFamily: "outfit-bold",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 20,
+            marginTop: 10,
           }}
         >
-          Catergory
-        </Text>
-        <Text style={{ color: Colors.PRIMARY, fontFamily: "outfit-medium" }}>
-          View All
-        </Text>
-      </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "outfit-bold",
+            }}
+          >
+            Catergory
+          </Text>
+          <Text style={{ color: Colors.PRIMARY, fontFamily: "outfit-medium" }}>
+            View All
+          </Text>
+        </View>
+      )}
+
       <FlatList
         data={categoryList}
         horizontal={true}
@@ -56,9 +67,7 @@ export default function Catergory() {
           <CategoryItem
             category={item}
             key={index}
-            onCategoryPress={(category) =>
-              router.push("/businesslist/" + item.name)
-            }
+            onCategoryPress={(category) => onCategoryPressHandler(item)}
           />
         )}
       />
