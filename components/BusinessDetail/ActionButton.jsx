@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   Linking,
+  Share,
 } from "react-native";
 import React from "react";
 
@@ -30,7 +31,7 @@ export default function ActionButton({ business }) {
       url: business?.website,
     },
     {
-      id: 1,
+      id: 4,
       name: "Share",
       icon: require("./../../assets/images/share.png"),
       url: business?.website,
@@ -39,6 +40,9 @@ export default function ActionButton({ business }) {
 
   const openButton = (item) => {
     if (item.name == "Share") {
+      Share.share({
+        message: `${business?.name} \n ${business?.website} \n ${business?.address} \n ${business?.description}`,
+      });
       return;
     }
     Linking.openURL(item?.url);
@@ -48,8 +52,11 @@ export default function ActionButton({ business }) {
     <View style={{ backgroundColor: "#fff", padding: 20 }}>
       <FlatList
         data={actionButtonMenu}
-        numColumns={4}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
+        horizontal={true}
+        contentContainerStyle={{
+          width: "100%",
+          justifyContent: "space-between",
+        }}
         renderItem={({ item, index }) => (
           <TouchableOpacity key={index} onPress={() => openButton(item)}>
             <Image
