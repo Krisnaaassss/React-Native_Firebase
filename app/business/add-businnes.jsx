@@ -51,6 +51,7 @@ export default function AddBusiness() {
 
   const onAddNewBusiness = async () => {
     setLoading(true);
+    // membuat nama file yang unik dengan menggunakan timestamp
     const fileName = Date.now().toString() + ".jpg";
     // fetch image dari uri yang di dapat dari image picker
     const response = await fetch(image);
@@ -64,8 +65,11 @@ export default function AddBusiness() {
         console.log("Uploaded a blob or file!");
       })
       .then((response) => {
+        // mengambil url download dari file yang telah di upload
         getDownloadURL(imageRef).then(async (downloadUrl) => {
-          console.log(downloadUrl);
+          // console.log(downloadUrl);
+          // menyimpan data business ke firestore
+          // dengan menggunakan url download dari gambar yang telah di upload
           saveBusinessDetail(downloadUrl);
         });
       });
@@ -106,10 +110,23 @@ export default function AddBusiness() {
 
   return (
     <View style={{ padding: 20 }}>
-      <Text style={{ fontFamily: "outfit-bold", fontSize: 25 }}>
-        AddBusiness
+      <Text
+        style={{
+          fontFamily: "outfit-bold",
+          fontSize: 25,
+          textAlign: "center",
+          marginBottom: 10,
+        }}
+      >
+        Add New Business
       </Text>
-      <Text style={{ fontFamily: "outfit", color: Colors.GRAY }}>
+      <Text
+        style={{
+          fontFamily: "outfit",
+          color: Colors.GRAY,
+          textAlign: "center",
+        }}
+      >
         Fill all details in order to add new business
       </Text>
       <TouchableOpacity
