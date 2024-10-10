@@ -51,10 +51,12 @@ export default function explore() {
         />
       </View>
       {/* Category */}
-      <Catergory
-        explore={true}
-        onCategorySelect={(category) => getBusinessByCategory(category)}
-      />
+      <View style={{ marginLeft: -25, marginTop: 20 }}>
+        <Catergory
+          explore={true}
+          onCategorySelect={(category) => getBusinessByCategory(category)}
+        />
+      </View>
       {/* Business List */}
       <ExploreBusinessList businessList={businessList} />
     </View>

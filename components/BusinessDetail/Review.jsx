@@ -56,7 +56,6 @@ export default function Review({ business }) {
           placeholder="Write a review"
           placeholderTextColor={Colors.GRAY}
           textAlignVertical="top"
-          maxLength={40}
           height={100}
           numberOfLines={4}
           multiline={true}

@@ -16,7 +16,7 @@ export default function UserInfo() {
     >
       <Image
         source={{ uri: user.imageUrl }}
-        style={{ width: 100, height: 100, borderRadius: 99 }}
+        style={{ width: 100, height: 100, borderRadius: 99, marginBottom: 10 }}
       />
       <Text style={{ fontFamily: "outfit-bold", fontSize: 20 }}>
         {user?.fullName}
