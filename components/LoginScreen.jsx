@@ -1,14 +1,6 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Colors } from "@/constants/Colors";
-import { useWarmUpBrowser } from "./../hooks/useWarmUpBrowser";
 import * as WebBrowser from "expo-web-browser";
 import { useOAuth } from "@clerk/clerk-expo";
 
@@ -36,7 +28,7 @@ export default function LoginScreen() {
         style={{
           display: "flex",
           alignItems: "center",
-          marginTop: 120,
+          marginTop: 50,
         }}
       >
         <Image

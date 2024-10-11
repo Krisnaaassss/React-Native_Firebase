@@ -17,9 +17,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/krisna.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.krisnaaassss.krisnaproject"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +41,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "03175a9a-34f7-4ece-9671-01ea3eabbe45"
+      }
     }
   }
 }

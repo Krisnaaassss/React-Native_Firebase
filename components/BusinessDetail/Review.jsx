@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -5,51 +6,67 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  ScrollView,
 } from "react-native";
-import React, { useState } from "react";
 import { Rating } from "react-native-ratings";
 import { Colors } from "../../constants/Colors";
 import { useUser } from "@clerk/clerk-expo";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../../configs/FirebaseConfig";
 
 export default function Review({ business }) {
   const [rating, setRating] = useState(4);
-  const [userInput, setUserInput] = useState();
+  const [userInput, setUserInput] = useState("");
+  const [reviews, setReviews] = useState([]);
   const { user } = useUser();
+
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
+  const loadReviews = async () => {
+    const docRef = doc(db, "BusinessList", business.id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setReviews(docSnap.data().reviews || []);
+    }
+  };
+
   const onSubmit = async () => {
-    const dofRef = doc(db, "BusinessList", business.id);
-    await updateDoc(dofRef, {
-      reviews: arrayUnion({
-        // arrayUnion digunakan untuk menambahkan data ke dalam array tanpa menggantikan data yang sudah ada.
-        // Jika data yang sama sudah ada, maka tidak akan di tambahkan.
-        rating,
-        review: userInput,
-        userName: user?.fullName,
-        userImage: user?.imageUrl,
-        user: user?.primaryEmailAddress?.emailAddress,
-      }),
+    const docRef = doc(db, "BusinessList", business.id);
+    const newReview = {
+      rating,
+      review: userInput,
+      userName: user?.fullName,
+      userImage: user?.imageUrl,
+      user: user?.primaryEmailAddress?.emailAddress,
+    };
+
+    await updateDoc(docRef, {
+      reviews: arrayUnion(newReview),
     });
+
+    
+    setReviews([newReview, ...reviews]);
+
     Alert.alert("Success", "Your review has been submitted");
     setUserInput("");
+    setRating(4); // Reset rating to default after submission
   };
 
   return (
-    <View
+    <ScrollView
       style={{
         padding: 20,
         backgroundColor: "#fff",
-        height: "100%",
       }}
     >
-      <Text style={{ fontFamily: "outfit-bold", fontSize: 20, marginTop: 10 }}>
-        Review
-      </Text>
       <View>
         <Rating
           showRating={false}
           imageSize={25}
-          onFinishRating={(rating) => setRating(rating)}
+          onFinishRating={(value) => setRating(value)}
+          startingValue={rating}
           style={{ paddingVertical: 10 }}
         />
         <TextInput
@@ -65,11 +82,12 @@ export default function Review({ business }) {
             borderWidth: 1,
             padding: 10,
             borderRadius: 10,
+            marginTop: 10,
           }}
         />
         <TouchableOpacity
           disabled={!userInput}
-          onPress={() => onSubmit()}
+          onPress={onSubmit}
           style={{
             padding: 10,
             backgroundColor: Colors.PRIMARY,
@@ -84,13 +102,12 @@ export default function Review({ business }) {
           </Text>
         </TouchableOpacity>
       </View>
-      {/* Display Previus Review */}
-      <View>
-        {business?.reviews?.map((item, index) => (
+
+      <View style={{ marginTop: 20 }}>
+        {reviews.map((item, index) => (
           <View
             key={index}
             style={{
-              display: "flex",
               flexDirection: "row",
               gap: 10,
               alignItems: "center",
@@ -105,13 +122,15 @@ export default function Review({ business }) {
               source={{ uri: item.userImage }}
               style={{ width: 50, height: 50, borderRadius: 99 }}
             />
-            <View style={{ display: "flex", gap: 5 }}>
+            <View style={{ flex: 1, gap: 5 }}>
               <Text style={{ fontFamily: "outfit-medium" }}>
                 {item.userName}
               </Text>
               <Rating
                 imageSize={20}
-                ratingCount={item.rating}
+                startingValue={item.rating}
+                readonly={true}
+                showRating={false}
                 style={{ alignItems: "flex-start" }}
               />
               <Text>{item.review}</Text>
@@ -119,6 +138,6 @@ export default function Review({ business }) {
           </View>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 }
